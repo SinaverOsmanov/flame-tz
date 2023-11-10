@@ -4,12 +4,10 @@ import "./App.css";
 function App() {
   return (
     <div className="App">
-      <div>
-        <Link to="peoples">peoples</Link>
-      </div>
-      <div>
-        <Link to="favorites">favorites</Link>
-      </div>
+      <nav>
+        <Link to="/peoples">peoples</Link>
+        <Link to="/favorites">favorites</Link>
+      </nav>
     </div>
   );
 }

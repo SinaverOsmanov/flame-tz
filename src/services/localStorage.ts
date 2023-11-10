@@ -3,20 +3,25 @@ import { Person } from "../types";
 const PERSON_KEY = "person";
 
 type LocalSetStorageType = {
-  person: (token: Person) => void;
-  people: (people: Person[]) => void;
+  person: (payload: Person) => void;
+  people: (payload: Person[]) => void;
 };
 type LocalGetStorageType = {
-  people: () => Person[];
+  person: (payload: string) => Person | undefined;
+  people: () => Person[] | [];
+};
+
+type LocalRemoveStorageType = {
+  person: (payload: Person) => void;
 };
 
 export function setTokens(): LocalSetStorageType {
   return {
     person: (payload: Person) => {
       const people = getTokens().people();
-      const isPersonFound = people.find((p) => p.name === payload.name);
+      const isFoundPerson = people.find((p) => p.url === payload.url);
 
-      if (!isPersonFound) {
+      if (!isFoundPerson) {
         localStorage.setItem(PERSON_KEY, JSON.stringify([...people, payload]));
       }
     },
@@ -28,11 +33,15 @@ export function setTokens(): LocalSetStorageType {
 
 export function getTokens(): LocalGetStorageType {
   return {
+    person: (payload: string) => {
+      const people = getTokens().people();
+      return people.find((p) => p.url === payload);
+    },
     people: () => JSON.parse(localStorage.getItem(PERSON_KEY) ?? "[]"),
   };
 }
 
-export function removeTokens() {
+export function removeTokens(): LocalRemoveStorageType {
   return {
     person: (payload: Person) => {
       let people = getTokens().people();
@@ -41,7 +50,7 @@ export function removeTokens() {
         throw new Error("Invalid data");
       }
 
-      people = people.filter((p) => p.name !== payload.name);
+      people = people.filter((p) => p.url !== payload.url);
       setTokens().people(people);
     },
   };
