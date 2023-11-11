@@ -47,7 +47,8 @@ export function removeTokens(): LocalRemoveStorageType {
       let people = getTokens().people();
 
       if (!Array.isArray(people)) {
-        throw new Error("Invalid data");
+        console.warn("Invalid data in local storage.");
+        people = [];
       }
 
       people = people.filter((p) => p.url !== payload.url);
@@ -56,10 +57,10 @@ export function removeTokens(): LocalRemoveStorageType {
   };
 }
 
-const localStorageService = {
+const personLocalStorageService = {
   setTokens,
   getTokens,
   removeTokens,
 };
 
-export default localStorageService as typeof localStorageService;
+export default personLocalStorageService as typeof personLocalStorageService;

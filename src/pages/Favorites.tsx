@@ -6,13 +6,14 @@ import BackButton from "./../components/BackButton";
 
 const Favorites = () => {
   const navigate = useNavigate();
+  const { getTokens, removeTokens } = localStorageService;
 
   const [favorites, setFavorites] = useState<Person[]>([]);
 
   const removeFavorite = (person: Person) => (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
 
-    localStorageService.removeTokens().person(person);
+    removeTokens().person(person);
 
     const filteredFavorite = favorites.filter((f) => f.name !== person.name);
 
@@ -20,7 +21,7 @@ const Favorites = () => {
   };
 
   useEffect(() => {
-    const data = localStorageService.getTokens().people();
+    const data = getTokens().people();
 
     setFavorites(data);
   }, []);

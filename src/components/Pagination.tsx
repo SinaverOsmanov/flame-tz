@@ -6,34 +6,42 @@ type PaginationPropsType = {
 };
 
 const Pagination = ({ total, pageSize = 5, current, getPageList }: PaginationPropsType) => {
-  const pages: string[] = new Array(Math.ceil(total / pageSize)).fill("");
+  const pageNumbers: string[] = new Array(Math.ceil(total / pageSize)).fill("");
+
+  const renderPageNumbers = () => {
+    return pageNumbers.map((_, index) => {
+      const page = index + 1;
+      const isActive = page === current;
+
+      return (
+        <span key={page} onClick={() => getPageList(page)} className={`page_number${isActive ? " active" : ""}`}>
+          {page}
+        </span>
+      );
+    });
+  };
 
   if (total < pageSize) return <div></div>;
 
   return (
     <div className="pagination">
-      <div>
-        <button disabled={current === 1} onClick={() => getPageList(current - 1)}>
-          prev
-        </button>
-      </div>
-      <div className="pagination_pages">
-        {pages.map((_, index) => {
-          const page = index + 1;
-          const isActive = page === current;
+      {total >= pageSize && (
+        <div>
+          <button disabled={current === 1} onClick={() => getPageList(current - 1)}>
+            prev
+          </button>
+        </div>
+      )}
 
-          return (
-            <span key={page} onClick={() => getPageList(page)} className={`page_number${isActive ? " active" : ""}`}>
-              {page}
-            </span>
-          );
-        })}
-      </div>
-      <div>
-        <button disabled={current === Math.ceil(total / 10)} onClick={() => getPageList(current + 1)}>
-          next
-        </button>
-      </div>
+      <div className="pagination_pages">{renderPageNumbers()}</div>
+
+      {total >= pageSize && (
+        <div>
+          <button disabled={current === Math.ceil(total / pageSize)} onClick={() => getPageList(current + 1)}>
+            next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
