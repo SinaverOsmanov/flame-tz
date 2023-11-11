@@ -1,13 +1,18 @@
 import { useNavigate, useParams } from "react-router-dom";
 import personStore from "../store/PersonStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import BackButton from "../components/BackButton";
 import { mappingToStringByKey } from "../helpers/mappingToStringByKey";
+import localStorageService from "../services/localStorage";
+import { PersonRecord } from "../types";
 
 const Person = observer(() => {
   const { id } = useParams<{ id: string }>();
   const { person, loading } = personStore;
+  const [isFavorite, setIsFav] = useState(true);
+
+  const { getTokens, setTokens, removeTokens } = localStorageService;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,13 +38,35 @@ const Person = observer(() => {
     "starships",
   ];
 
-  if (loading) return <div className="spinner"></div>;
+  const toggleFavorite = (person: PersonRecord) => (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
 
-  if (!person) return <div>User not found</div>;
+    const people = getTokens().people();
+    const isFoundPerson = people.find((p) => p.url === person.url);
+
+    if (!!isFoundPerson) {
+      removeTokens().person(person);
+      setIsFav(true);
+    } else {
+      setTokens().person(person);
+      setIsFav(false);
+    }
+  };
+  if (!person) return <div className="spinner"></div>;
+  if (loading) return <div className="spinner"></div>;
 
   return (
     <div className="person-details">
-      <h1 className="title">{person.name}</h1>
+      <header>
+        <div>
+          <h1 className="title">{person.name}</h1>
+        </div>
+        <div>
+          <button onClick={toggleFavorite(person)} className={`${isFavorite ? "" : "remove_button"}`}>
+            {isFavorite ? "Add" : "remove"}
+          </button>
+        </div>
+      </header>
       <div className="list">
         <div className="list_head">
           {columnHeaders.map((key) => (

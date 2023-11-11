@@ -1,9 +1,9 @@
-import { Person } from "../types";
+import { Person, PersonRecord } from "../types";
 
 const PERSON_KEY = "person";
 
 type LocalSetStorageType = {
-  person: (payload: Person) => void;
+  person: (payload: Person | PersonRecord) => void;
   people: (payload: Person[]) => void;
 };
 type LocalGetStorageType = {
@@ -12,12 +12,12 @@ type LocalGetStorageType = {
 };
 
 type LocalRemoveStorageType = {
-  person: (payload: Person) => void;
+  person: (payload: Person | PersonRecord) => void;
 };
 
 export function setTokens(): LocalSetStorageType {
   return {
-    person: (payload: Person) => {
+    person: (payload: Person | PersonRecord) => {
       const people = getTokens().people();
       const isFoundPerson = people.find((p) => p.url === payload.url);
 
@@ -43,7 +43,7 @@ export function getTokens(): LocalGetStorageType {
 
 export function removeTokens(): LocalRemoveStorageType {
   return {
-    person: (payload: Person) => {
+    person: (payload: Person | PersonRecord) => {
       let people = getTokens().people();
 
       if (!Array.isArray(people)) {
