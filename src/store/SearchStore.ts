@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { Person, ResponseData } from "../types";
 import { fetchApiData } from "../helpers/fetchAPI";
+import { debounce } from "./../helpers/debounce";
 
 class SearchStore {
   search: string = "";
@@ -14,26 +15,8 @@ class SearchStore {
     makeAutoObservable(this);
   }
 
-  setSearch = async (value: string, page: number) => {
-    this.setLoading(true);
-
-    runInAction(() => {
-      this.search = value;
-      this.page = 1;
-    });
-
-    if (value !== "") {
-      const response: ResponseData<Person[]> = await this.performSearch(value, page);
-
-      this.setData(response.results);
-      runInAction(() => {
-        this.total = response.count;
-      });
-    } else {
-      this.reset();
-    }
-
-    this.setLoading(false);
+  setSearch = async (value: string) => {
+    this.search = value;
   };
 
   reset = () => {
@@ -51,14 +34,45 @@ class SearchStore {
     this.loading = value;
   }
 
-  fetchPeople = async (page: number) => {
-    await this.setSearch(this.search, page);
-    this.page = page;
+  fetchPeople = async (query: string, page: number) => {
+    try {
+      runInAction(() => {
+        this.setLoading(true);
+        this.page = 1;
+      });
+
+      if (query !== "") {
+        const response = await this.performSearch(query, page);
+
+        runInAction(() => {
+          this.setData(response.results);
+          this.total = response.count;
+          this.page = page;
+        });
+      } else {
+        this.reset();
+      }
+    } finally {
+      runInAction(() => {
+        this.setLoading(false);
+      });
+    }
   };
 
   private performSearch = async (value: string, page: number): Promise<ResponseData<Person[]>> => {
     return await fetchApiData<ResponseData<Person[]>>(`https://swapi.dev/api/people/?page=${page}&search=${value}`);
   };
+
+  searchQuery = async (val: string, page: number) => {
+    runInAction(() => {
+      this.setLoading(true);
+    });
+
+    this.setSearch(val);
+    await this.debounceFetchPeople(val, page);
+  };
+
+  debounceFetchPeople = debounce(this.fetchPeople, 700);
 }
 
 const store = new SearchStore();

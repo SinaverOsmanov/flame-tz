@@ -9,16 +9,16 @@ const Search = observer(() => {
 
   const { search, searchResults, loading, page, total } = searchStore;
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    searchStore.setSearch(event.target.value, 1);
-  };
+  async function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+    await searchStore.searchQuery(event.target.value, 1);
+  }
 
   async function fetchPeopleDataByPage(page: number) {
-    await searchStore.fetchPeople(page);
+    await searchStore.searchQuery(search, page);
   }
 
   const renderSearchResults = () => {
-    if (searchResults.length > 0) {
+    if (total > 0) {
       return searchResults.map((p) => (
         <p className="search_list__item" key={p.name} onClick={() => navigate(p.url)}>
           {p.name}
@@ -26,8 +26,7 @@ const Search = observer(() => {
       ));
     } else if (total === 0) {
       return <p className="search_list__item disable">Not found</p>;
-    }
-    return null;
+    } else return null;
   };
 
   return (
