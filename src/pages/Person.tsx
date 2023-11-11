@@ -1,18 +1,31 @@
 import { useNavigate, useParams } from "react-router-dom";
 import personStore from "../store/PersonStore";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import BackButton from "../components/BackButton";
 import { mappingToStringByKey } from "../helpers/mappingToStringByKey";
-import localStorageService from "../services/localStorage";
-import { PersonRecord } from "../types";
+import { useToggleFavoritePerson } from "../hooks/useToggleFavoritePerson";
+
+const columnHeaders = [
+  "gender",
+  "height",
+  "mass",
+  "hair_color",
+  "birth_year",
+  "eye_color",
+  "skin_color",
+  "homeworld",
+  "films",
+  "species",
+  "vehicles",
+  "starships",
+];
 
 const Person = observer(() => {
   const { id } = useParams<{ id: string }>();
   const { person, loading } = personStore;
-  const [isFavorite, setIsFav] = useState(true);
+  const { isFavorite, toggleFavorite } = useToggleFavoritePerson(person);
 
-  const { getTokens, setTokens, removeTokens } = localStorageService;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,37 +36,7 @@ const Person = observer(() => {
     }
   }, [id, navigate]);
 
-  const columnHeaders = [
-    "gender",
-    "height",
-    "mass",
-    "hair_color",
-    "birth_year",
-    "eye_color",
-    "skin_color",
-    "homeworld",
-    "films",
-    "species",
-    "vehicles",
-    "starships",
-  ];
-
-  const toggleFavorite = (person: PersonRecord) => (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-
-    const people = getTokens().people();
-    const isFoundPerson = people.find((p) => p.url === person.url);
-
-    if (!!isFoundPerson) {
-      removeTokens().person(person);
-      setIsFav(true);
-    } else {
-      setTokens().person(person);
-      setIsFav(false);
-    }
-  };
-  if (!person) return <div className="spinner"></div>;
-  if (loading) return <div className="spinner"></div>;
+  if (!person || loading) return <div className="spinner"></div>;
 
   return (
     <div className="person-details">

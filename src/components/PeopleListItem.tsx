@@ -7,9 +7,10 @@ function PeopleListItem({ item }: { item: Person }) {
   const { isFavorite, toggleFavorite } = useToggleFavoritePerson(item);
 
   const navigate = useNavigateToPersonUrl();
+
   const favorite_button = useMemo(() => {
     return (
-      <button onClick={toggleFavorite(item.url)} className={`${isFavorite ? "" : "remove_button"}`}>
+      <button onClick={toggleFavorite(item)} className={`${isFavorite ? "" : "remove_button"}`}>
         {isFavorite ? "Add" : "remove"}
       </button>
     );
