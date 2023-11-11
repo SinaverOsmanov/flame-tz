@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/flame-tz/static/css/main.dfe2fa41.css",
-    "main.js": "/flame-tz/static/js/main.eca2afa4.js",
+    "main.js": "/flame-tz/static/js/main.644db172.js",
     "index.html": "/flame-tz/index.html",
     "main.dfe2fa41.css.map": "/flame-tz/static/css/main.dfe2fa41.css.map",
-    "main.eca2afa4.js.map": "/flame-tz/static/js/main.eca2afa4.js.map"
+    "main.644db172.js.map": "/flame-tz/static/js/main.644db172.js.map"
   },
   "entrypoints": [
     "static/css/main.dfe2fa41.css",
-    "static/js/main.eca2afa4.js"
+    "static/js/main.644db172.js"
   ]
 }
