@@ -8,7 +8,11 @@ import Favorites from "./pages/Favorites";
 import ErrorPage from "./pages/ErrorPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
-const basePath = process.env.REACT_APP_BASE_PATH || "/";
+const basePath = process.env.NODE_ENV === "production" ? "/flame-tz" : "/";
+
+if (window.location.pathname === "/flame-tz") {
+  window.location.pathname = "/";
+}
 
 const routers = createBrowserRouter(
   [
@@ -16,6 +20,10 @@ const routers = createBrowserRouter(
       path: "/",
       element: <App />,
       errorElement: <ErrorPage />,
+    },
+    {
+      path: "/flame-tz",
+      element: <App />,
     },
     {
       path: "/peoples",
