@@ -9,24 +9,27 @@ import ErrorPage from "./pages/ErrorPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
-const routers = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/peoples",
-    element: <People />,
-  },
-  {
-    path: "/peoples/:id",
-    element: <Person />,
-  },
-  {
-    path: "/favorites",
-    element: <Favorites />,
-  },
-]);
+const routers = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <App />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/peoples",
+      element: <People />,
+    },
+    {
+      path: "/peoples/:id",
+      element: <Person />,
+    },
+    {
+      path: "/favorites",
+      element: <Favorites />,
+    },
+  ],
+  { basename: "/flame-tz" }
+);
 
 root.render(<RouterProvider router={routers} />);
