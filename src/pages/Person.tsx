@@ -3,7 +3,7 @@ import personStore from "../store/PersonStore";
 import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import BackButton from "../components/BackButton";
-import { PersonRecord } from "../types";
+import { mappingToStringByKey } from "../helpers/mappingToStringByKey";
 
 const Person = observer(() => {
   const { id } = useParams<{ id: string }>();
@@ -31,11 +31,7 @@ const Person = observer(() => {
     "species",
     "vehicles",
     "starships",
-  ] as (keyof PersonRecord)[];
-
-  function mappingToStringByKey<T>(array: T[], key: keyof T): string {
-    return array.map((item) => item[key]).join(", ");
-  }
+  ];
 
   if (loading) return <div className="spinner"></div>;
 
