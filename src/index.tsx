@@ -10,7 +10,7 @@ import ErrorPage from "./pages/ErrorPage";
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 const basePath = process.env.NODE_ENV === "production" ? "/flame-tz" : "/";
 
-if (window.location.pathname === "/flame-tz") {
+if (process.env.NODE_ENV === "development" && window.location.pathname === "/flame-tz") {
   window.location.pathname = "/";
 }
 
