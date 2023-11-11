@@ -8,6 +8,7 @@ import Favorites from "./pages/Favorites";
 import ErrorPage from "./pages/ErrorPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+const basePath = process.env.REACT_APP_BASE_PATH || "/";
 
 const routers = createBrowserRouter(
   [
@@ -29,7 +30,7 @@ const routers = createBrowserRouter(
       element: <Favorites />,
     },
   ],
-  { basename: "/flame-tz" }
+  { basename: basePath }
 );
 
 root.render(<RouterProvider router={routers} />);
